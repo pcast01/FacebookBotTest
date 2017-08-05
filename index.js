@@ -51,3 +51,22 @@ function sendMessage(recipientId, message) {
         }
     });
 };
+
+// function to send json to mongodb
+function sendMessageToDB(recipientId, message) {  
+    request({
+        url: 'https://api.mlab.com/api/1/databases/tenth-samurai/collections/Test',
+        qs: {access_token: process.env.MLAB_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id: recipientId},
+            message: message,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+    });
+};
