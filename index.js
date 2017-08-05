@@ -33,6 +33,18 @@ app.post('/webhook', function (req, res) {
     res.sendStatus(200);
 });
 
+app.post('/mongoDB', function (req, res) { 
+    //var qs = req.query(test);
+    //res.setHeader('Content-Type', 'application/json');
+    req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    console.log('Testing...');
+    
+    //res.write(qs);
+    sendMessageToDB(172323672892326);
+
+    res.sendStatus(200);
+});
+
 // generic function sending messages
 function sendMessage(recipientId, message) {  
     request({
@@ -53,14 +65,24 @@ function sendMessage(recipientId, message) {
 };
 
 // function to send json to mongodb
-function sendMessageToDB(recipientId, message) {  
+function sendMessageToDB(recipientId) {
+    let messageData = {
+        "message": "Hello from localhost",
+        "created_time": "2017-07-29T19:29:38+0000",
+        "from": {
+            "name": "Ariel Booth-Castillo",
+            "email": "10212287516170271@facebook.com",
+            "id": "10212287516170271"
+        },
+        "id": "m_mid.$cAACcum0oHJBjwRigGVdj9NZPlA00"
+    }
     request({
-        url: 'https://api.mlab.com/api/1/databases/tenth-samurai/collections/Test',
-        qs: {access_token: process.env.MLAB_ACCESS_TOKEN},
+        url: 'https://api.mlab.com/api/1/databases/tenth-samurai/collections/Test?apiKey=9vrjZkFE-HA0eOsfgznB69eoA1yayFu2',
+        //qs: {access_token: process.env.MLAB_ACCESS_TOKEN},
         method: 'POST',
         json: {
             recipient: {id: recipientId},
-            message: message,
+            message: messageData,
         }
     }, function(error, response, body) {
         if (error) {
