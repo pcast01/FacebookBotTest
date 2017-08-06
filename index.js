@@ -58,8 +58,8 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
-            sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
             TestMessage = event;
+            sendMessage(event.sender.id, {text: "Counter: " +i+ " Echo: " + event.message.text});
             messagePost();
         }
         
@@ -67,8 +67,7 @@ app.post('/webhook', function (req, res) {
     res.sendStatus(200);
 });
 
-function messagePost() { 
-
+function messagePost() {
     //res.setHeader('Content-Type', 'application/json');
     console.log('Testing...');
     MongoClient.connect(url, function(err, db) {
