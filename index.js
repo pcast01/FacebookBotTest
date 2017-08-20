@@ -83,7 +83,7 @@ var TestMessage = new Message({
 function sendMessage(recipientId, message) {  
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: process.env.USER_ACCESS_TOKEN},
+        qs: {access_token: process.env.PAGE_ACCESS_TOKEN,
         method: 'POST',
         json: {
             recipient: {id: recipientId},
@@ -95,5 +95,6 @@ function sendMessage(recipientId, message) {
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
-    });
-};
+    }
+});
+}
