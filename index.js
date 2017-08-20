@@ -7,7 +7,7 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 // Connection URL
-var url = 'mongodb://tenthsamurai:tenthsamurai@ds129023.mlab.com:29023/tenth-samurai';
+var url = process.env.MLAB_CONNECTION_STRING;
 
 // Use connect method to connect to the Server
 MongoClient.connect(url, function(err, db) {
@@ -26,17 +26,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 app.listen((process.env.PORT || 3000));
 
-app.route('/m')
-  .get(function(req, res) {
-    res.send('Get a random book');
-  })
-  .post(function(req, res) {
-    res.send('Add a book');
-  });
-
 // Server frontpage
 app.get('/', function (req, res) {  
-    res.send('This is TestBot Server');
+    res.send('This is MK TestBot Server');
     res.end();
 });
 
@@ -91,7 +83,7 @@ var TestMessage = new Message({
 function sendMessage(recipientId, message) {  
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        qs: {access_token: process.env.USER_ACCESS_TOKEN},
         method: 'POST',
         json: {
             recipient: {id: recipientId},
@@ -105,36 +97,3 @@ function sendMessage(recipientId, message) {
         }
     });
 };
-
-app.post('/sendMsgtoDB', messagePost);
-
-// function to send json to mongodb
-function sendMessageToDB() {
-    //res.setHeader('Content-Type', 'application/json');
-    console.log('Sending Msg to DB');
-    let messageData = {
-        "message": "Hello from localhost Next",
-        "created_time": "2017-07-29T19:29:38+0000",
-        "from": {
-            "name": "Ariel Booth-Castillo",
-            "email": "10212287516170271@facebook.com",
-            "id": "10212287516170271"
-        },
-        "id": "m_mid.$cAACcum0oHJBjwRigGVdj9NZPlA00"
-    };
-
-    request({
-        url: 'https://api.mlab.com/api/1/databases/tenth-samurai/collections/Test',
-        qs: {access_token: '9vrjZkFE-HA0eOsfgznB69eoA1yayFu2'},
-        method: 'POST',
-        json: {
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending db message: ', error);
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-        }
-    });
-}
