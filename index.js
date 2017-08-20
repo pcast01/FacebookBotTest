@@ -13,7 +13,6 @@ var url = 'mongodb://tenthsamurai:tenthsamurai@ds129023.mlab.com:29023/tenth-sam
 MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected correctly to server");
- 
   db.close();
 });
 
@@ -34,8 +33,6 @@ app.route('/m')
   .post(function(req, res) {
     res.send('Add a book');
   });
-
-
 
 // Server frontpage
 app.get('/', function (req, res) {  
@@ -59,7 +56,7 @@ app.post('/webhook', function (req, res) {
         var event = events[i];
         if (event.message && event.message.text) {
             TestMessage = event;
-            sendMessage(event.sender.id, {text: "Counter: " +i+ " Echo: " + event.message.text});
+            sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
             messagePost();
         }
         
@@ -68,30 +65,15 @@ app.post('/webhook', function (req, res) {
 });
 
 function messagePost() {
-    //res.setHeader('Content-Type', 'application/json');
     console.log('Testing...');
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
         console.log("Connected correctly to server");
-        var collection = db.collection('Test');
-            // //res.write(qs);
-            // sendMessageToDB(172323672892326);// res.sendStatus(200);
-            // var doneMessage = new Message({
-            //     message: "Testing from POST to fbook2",
-            //     created_time: "2017-08-5T19:29:38+0000",
-            //     from: {
-            //         name: "Ariel Booth-Castillo",
-            //         email: "10212287516170271@facebook.com",
-            //         id: "10212287516170271"
-            //     },
-            //     id: "m_mid.$cAACcum0oHJBjwRigGVdj9NZPlA00"
-            // });
-
+            var collection = db.collection('TestMk');  
             collection.insert(TestMessage);
 
         db.close();
-        });
-    //res.end(); 
+    });
 }
 
 var TestMessage = new Message({
@@ -154,7 +136,5 @@ function sendMessageToDB() {
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
         }
-        //response.end();
     });
-    //response.end();
 }
